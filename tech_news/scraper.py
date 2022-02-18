@@ -2,6 +2,7 @@ import requests
 import time
 from parsel import Selector
 import re
+from tech_news.database import create_news
 
 
 # Requisito 1
@@ -81,7 +82,7 @@ def scrape_noticia(html_content):
         "url": url_selector,
         "title": title_selector,
         "timestamp": timestamp_selector,
-        "writer": writer_selector.strip(),
+        "writer": writer_selector.strip() if writer_selector else None,
         "shares_count": int(share_seletor) if share_seletor else 0,
         "comments_count": int(coments_seletor) if coments_seletor else 0,
         "summary": summary,
@@ -92,10 +93,23 @@ def scrape_noticia(html_content):
 
 # Requisito 5
 def get_tech_news(amount):
-    """Seu código deve vir aqui"""
+    html_content = fetch("https://www.tecmundo.com.br/novidades")
+    news_urls_list = scrape_novidades(html_content)
+    tech_news_list = []
+    while len(tech_news_list) < amount:
+        for url in news_urls_list:
+            new_content = fetch(url)
+            new = scrape_noticia(new_content)
+            if len(tech_news_list) < amount:
+                tech_news_list.append(new)
+            else:
+                create_news(tech_news_list)
+                return tech_news_list
+        next_page = fetch(scrape_next_page_link(html_content))
+        news_urls_list = scrape_novidades(next_page)
+    create_news(tech_news_list)
+    return tech_news_list
 
 
-# noticia = fetch(
-#     "https://www.tecmundo.com.br/mobilidade-urbana-smart-cities/155000-musk-tesla-carros-totalmente-autonomos.htm"
-#     )
-# print(scrape_noticia(noticia))
+# print()
+# print(len(get_tech_news(30)))
