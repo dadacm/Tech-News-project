@@ -42,7 +42,8 @@ def search_by_source(source):
 
 # Requisito 9
 def search_by_category(category):
-    """Seu código deve vir aqui"""
+    news_found = search_news(query("category", category))
+    return tupla_title_url(news_found)
 
 
 # get_tech_news(15)
