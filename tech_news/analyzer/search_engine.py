@@ -42,7 +42,7 @@ def search_by_source(source):
 
 # Requisito 9
 def search_by_category(category):
-    news_found = search_news(query("category", category))
+    news_found = search_news(query("categories", category))
     return tupla_title_url(news_found)
 
 
