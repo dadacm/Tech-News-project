@@ -1,4 +1,5 @@
 from tech_news.database import search_news
+from datetime import datetime
 # from tech_news.scraper import get_tech_news
 
 
@@ -22,8 +23,15 @@ def search_by_title(title):
 
 
 # Requisito 7
+# validar formato da data
+# https://docs.python.org/pt-br/3/library/datetime.html#strftime-and-strptime-behavior
 def search_by_date(date):
-    """Seu código deve vir aqui"""
+    try:
+        datetime.strptime(date, "%Y-%m-%d")
+    except ValueError:
+        raise ValueError("Data inválida")
+    news_found = search_news(query("timestamp", date))
+    return tupla_title_url(news_found)
 
 
 # Requisito 8
