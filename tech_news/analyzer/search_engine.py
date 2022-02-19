@@ -36,7 +36,8 @@ def search_by_date(date):
 
 # Requisito 8
 def search_by_source(source):
-    """Seu código deve vir aqui"""
+    news_found = search_news(query("sources", source))
+    return tupla_title_url(news_found)
 
 
 # Requisito 9
